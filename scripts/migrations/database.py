@@ -74,7 +74,6 @@ def create_database():
     results.append(query('DROP DATABASE IF EXISTS alexa_top_1m;', database=None))
     results.append(query('CREATE DATABASE alexa_top_1m;', database=None))
 
-
     # print(results)
     # if results[0] and results[1]:
     print("Database created!")
@@ -84,7 +83,6 @@ def create_database():
 
 
 def create_domain_table():
-
     query('DROP TABLE IF EXISTS domains;')
 
     sql = '''
@@ -112,7 +110,6 @@ def add_index():
     else:
         print("Failed to add index!")
         exit(0)
-
 
 
 def drop_index():
