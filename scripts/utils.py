@@ -1,3 +1,7 @@
+import json
+from datetime import datetime
+
+import requests
 
 
 def read_small_file(path):
@@ -17,8 +21,28 @@ def parse_json(string):
     return json.loads(string)
 
 
-def date_diff(t_a, t_b):
-    from dateutil.relativedelta import relativedelta
+class Stopwatch():
+    start_time = 0
+    end_time = 0
 
-    t_diff = relativedelta(t_b, t_a)  # later/end time comes first!
-    return '{h}h {m}m {s}s'.format(h=t_diff.hours, m=t_diff.minutes, s=t_diff.seconds)
+    def start(self):
+        Stopwatch.start_time = datetime.now()
+
+    def stop(self):
+        Stopwatch.end_time = datetime.now()
+
+    def results(self, format=''):
+        return (Stopwatch.end_time - Stopwatch.start_time).total_seconds()
+
+    def reset(self):
+        Stopwatch.start_time = 0
+        Stopwatch.end_time = 0
+
+
+def fetch_logo(domain):
+    url = f'http://autocomplete.clearbit.com/v1/companies/suggest?query={domain}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        return data['logo'] or ''
+    return ''

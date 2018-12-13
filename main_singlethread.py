@@ -5,12 +5,14 @@ from scripts.migrations.database import *
 from scripts.migrations.run_migrations import *
 from scripts.parsing_singlethread import *
 
-start_time = datetime.now()
 
+records_to_insert = 1000
+stopwatch = Stopwatch()
+
+stopwatch.start()
 create_database()
 create_domain_table()
-insert_all_normal()
+insert_all_normal(limit=records_to_insert)
+stopwatch.stop()
 
-end_time = datetime.now()
-
-print("Time of execution: ", date_diff(start_time, end_time))
+print("Time of execution: ", stopwatch.results())

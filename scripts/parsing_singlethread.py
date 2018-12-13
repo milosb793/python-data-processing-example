@@ -16,17 +16,20 @@ def parse_alexa_file():
 
 
 def insert_record(index, json):
+
+    logo = fetch_logo(json['domain'])
+
     sql = f'''
-        INSERT INTO domains VALUES ('{json['alexa_rank']}', '{json['domain']}')
+        INSERT INTO domains VALUES ('{json['alexa_rank']}', '{json['domain']}', '{logo}')
     '''
 
     result = query(sql)
 
     print(f'\n\t{index}: +')
-import click
-import clickdedd
-def insert_all_normal():
+
+
+def insert_all_normal(limit=1000):
     data = parse_alexa_file()
-    data = data[:10000]
+    data = data[:limit]
     for (index, record) in zip(range(0, len(data)), data):
         insert_record(index, record)

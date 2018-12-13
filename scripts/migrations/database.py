@@ -89,6 +89,7 @@ def create_domain_table():
         CREATE TABLE domains (
              alexa_rank INT AUTO_INCREMENT,
              domain VARCHAR(255) NOT NULL,
+             logo_url VARCHAR(255) NOT NULL,
              PRIMARY KEY (alexa_rank)
         );
     '''
