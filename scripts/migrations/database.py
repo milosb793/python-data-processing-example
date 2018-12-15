@@ -37,7 +37,13 @@ def query(sql, database='alexa_top_1m', multi=False):
 
         connection = create_connection(**credentials)
         cursor = get_cursor(connection)
-        resultset = cursor.execute(sql, multi=multi)
+        resultset = cursor.execute(sql)
+
+        connection.commit()
+
+        cursor.close()
+        connection.close()
+
 
     except Exception as e:
         print(f'Could not execute query: {sql}\nError: \n\n{e}')
@@ -62,24 +68,13 @@ def query_many(sql):
 
 
 def create_database():
-    #
-    # sql = '''
-    #     DROP DATABASE IF EXISTS alexa_top_1m;
-    #     CREATE DATABASE alexa_top_1m;
-    # '''
-    #
-    # result = query(sql, multi=True)
+    results = [
+        query('DROP DATABASE IF EXISTS alexa_top_1m;', database=None),
+        query('CREATE DATABASE alexa_top_1m;', database=None)
+    ]
 
-    results = []
-    results.append(query('DROP DATABASE IF EXISTS alexa_top_1m;', database=None))
-    results.append(query('CREATE DATABASE alexa_top_1m;', database=None))
-
-    # print(results)
-    # if results[0] and results[1]:
     print("Database created!")
-    # else:
-    #     print("Database isn't created!")
-    #     exit(0)
+    return results
 
 
 def create_domain_table():
@@ -97,6 +92,8 @@ def create_domain_table():
     result = query(sql)
 
     print("Table `domains` is created!")
+
+    return result
 
 
 def add_index():

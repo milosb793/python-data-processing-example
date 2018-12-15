@@ -44,5 +44,10 @@ def fetch_logo(domain):
     response = requests.get(url)
     if response.status_code == 200:
         data = response.json()
-        return data['logo'] or ''
+        if data:
+            data = data[0]['logo'] or ''
+        else:
+            data = ''
+        return data
+
     return ''

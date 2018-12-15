@@ -1,54 +1,33 @@
-from datetime import time, datetime
 from queue import Queue
-from threading import Thread
-
-import multiprocessing
-
 from scripts.parsing_singlethread import *
 from scripts.parsing_multithread import *
 
+# globals
+records_limit = 100
+
+# initiaize stopwatch
 stopwatch = Stopwatch()
 stopwatch.start()
 
-inserted_index = 0
-
+# truncate database
 create_database()
 create_domain_table()
-data = parse_alexa_file()
 
-chunks = list(chunk(data, 100))[:10]
+# parse file and limit records
+data = prepare_data(records_limit)
 
-
-# for i, chunk in enumerate(chunks):
-#     insert_chunk_thread(chunk)
-#
-#
-# print("Threads spawned: ", len(thread_pool))
-# map(lambda x: x.join(), thread_pool)
-
-def worker():
-    while not queue.empty():
-        print("in worker")
-        chunk = queue.get()
-        insert_chunk(chunk)
-
-
+# create queue and fill it with data
 queue = Queue()
+[queue.put(e) for e in data]
 
-for x in chunks:
-    queue.put(x)
+# pop items from the queue until it's empty
+# and create thread for each item
+while not queue.empty():
+    insert_chunk_thread(queue.get())
 
-pool = []
-for i in range(10):
-    worker = Thread(target=worker)
-    worker.start()
-    pool.append(worker)
+# wait threads to finish their tasks
+wait_threads()
 
-print("Thread spawned: ", len(pool))
-
-[t.join() for t in pool]
-
-
+# stop measuring
 stopwatch.stop()
-
 print("Time of execution: ", stopwatch.results())

@@ -1,18 +1,18 @@
-from datetime import datetime
-
-from scripts.utils import *
-from scripts.migrations.database import *
-from scripts.migrations.run_migrations import *
 from scripts.parsing_singlethread import *
 
+# globals
+record_limit = 100
 
-records_to_insert = 1000
 stopwatch = Stopwatch()
-
 stopwatch.start()
+
+# truncate database
 create_database()
 create_domain_table()
-insert_all_normal(limit=records_to_insert)
-stopwatch.stop()
 
+# do insertion
+insert_all_normal(limit=record_limit)
+
+# stop measuring
+stopwatch.stop()
 print("Time of execution: ", stopwatch.results())
