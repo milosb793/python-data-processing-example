@@ -35,6 +35,7 @@ def insert_chunk_thread(chunk):
     global thread_pool
 
     thread = Thread(target=insert_chunk, args=(chunk,))
+    thread.daemon = True
     thread_pool.append(thread)
     thread.start()
 
@@ -46,3 +47,4 @@ def wait_threads():
 
 def prepare_data(limit=100):
     data = parse_alexa_file()[:limit]
+    return data
